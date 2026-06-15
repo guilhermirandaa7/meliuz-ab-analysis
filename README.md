@@ -1,5 +1,3 @@
-
-@"
 # Meliuz A/B Test Analyzer
 
 Solucao automatizada para analise de testes A/B de cashback do Meliuz Growth.
