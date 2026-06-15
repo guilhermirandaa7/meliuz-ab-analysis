@@ -29,17 +29,31 @@ def decidir_vencedor(metricas):
     vencedor = metricas.sort_values('margem_liquida', ascending=False).iloc[0]
     return vencedor
 
+def gerar_alertas(metricas):
+    alertas = []
+    for _, row in metricas.iterrows():
+        if row['margem_liquida'] <= 0:
+            alertas.append('ALERTA: ' + str(row['Grupos']) + ' tem margem zero ou negativa — cashback distribuido >= comissao recebida. Grupo inviavel financeiramente.')
+    return alertas
+
 def gerar_relatorio(df, metricas, vencedor, caminho_csv):
     parceiro = df['Parceiro'].iloc[0]
     data_inicio = df['Data'].min().strftime('%d/%m/%Y')
     data_fim = df['Data'].max().strftime('%d/%m/%Y')
     gerado_em = datetime.now().strftime('%d/%m/%Y %H:%M')
+    alertas = gerar_alertas(metricas)
     linhas = []
     linhas.append('# Relatorio de Teste A/B - ' + parceiro)
     linhas.append('')
     linhas.append('**Periodo:** ' + data_inicio + ' a ' + data_fim)
     linhas.append('**Gerado em:** ' + gerado_em)
     linhas.append('')
+    if alertas:
+        linhas.append('## Alertas')
+        linhas.append('')
+        for alerta in alertas:
+            linhas.append('> ' + alerta)
+        linhas.append('')
     linhas.append('---')
     linhas.append('')
     linhas.append('## Metricas por Grupo')

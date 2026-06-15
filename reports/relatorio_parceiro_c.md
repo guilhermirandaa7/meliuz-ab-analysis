@@ -1,7 +1,11 @@
 # Relatorio de Teste A/B - Parceiro C
 
 **Periodo:** 01/07/2011 a 14/08/2011
-**Gerado em:** 15/06/2026 16:19
+**Gerado em:** 15/06/2026 16:37
+
+## Alertas
+
+> ALERTA: Grupo 2 tem margem zero ou negativa — cashback distribuido >= comissao recebida. Grupo inviavel financeiramente.
 
 ---
 
