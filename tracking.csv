@@ -1,0 +1,4 @@
+nome_teste,descricao,parceiro,periodo,grupos_testados,grupo_vencedor,margem_vencedor,margem_pct_vencedor,cashback_rate_vencedor,decisao,analisado_em,arquivo_origem
+AB_Parceiro_A,Teste A/B de cashback para Parceiro A,Parceiro A,01/01/2011 a 02/04/2011,Grupo 1 | Grupo 2 | Grupo 3,Grupo 1,404711.0,63.4%,4.2%,Escalar Grupo 1,15/06/2026 16:19,data/dataset_01_parceiroA.csv
+AB_Parceiro_B,Teste A/B de cashback para Parceiro B,Parceiro B,01/05/2011 a 30/06/2011,Grupo 1 | Grupo 2 | Grupo 3,Grupo 1,286570.0,63.6%,4.0%,Escalar Grupo 1,15/06/2026 16:19,data/dataset_02_parceiroB.csv
+AB_Parceiro_C,Teste A/B de cashback para Parceiro C,Parceiro C,01/07/2011 a 14/08/2011,Grupo 1 | Grupo 2,Grupo 1,34769.0,28.6%,5.0%,Escalar Grupo 1,15/06/2026 16:19,data/dataset_03_parceiroC.csv

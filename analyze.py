@@ -34,7 +34,6 @@ def gerar_relatorio(df, metricas, vencedor, caminho_csv):
     data_inicio = df['Data'].min().strftime('%d/%m/%Y')
     data_fim = df['Data'].max().strftime('%d/%m/%Y')
     gerado_em = datetime.now().strftime('%d/%m/%Y %H:%M')
-
     linhas = []
     linhas.append('# Relatorio de Teste A/B - ' + parceiro)
     linhas.append('')
@@ -47,7 +46,6 @@ def gerar_relatorio(df, metricas, vencedor, caminho_csv):
     linhas.append('')
     linhas.append('| Grupo | Compradores | Comissao Total | Cashback Total | Margem Liquida | Margem % | Cashback Rate | Ticket Medio |')
     linhas.append('|-------|-------------|----------------|----------------|----------------|----------|---------------|--------------|')
-
     for _, row in metricas.iterrows():
         linha = '| ' + str(row['Grupos'])
         linha += ' | ' + str(int(row['compradores_total']))
@@ -58,7 +56,6 @@ def gerar_relatorio(df, metricas, vencedor, caminho_csv):
         linha += ' | ' + str(round(row['cashback_rate'], 1)) + '%'
         linha += ' | R$ ' + str(round(row['ticket_medio'], 2)) + ' |'
         linhas.append(linha)
-
     linhas.append('')
     linhas.append('---')
     linhas.append('')
@@ -71,15 +68,41 @@ def gerar_relatorio(df, metricas, vencedor, caminho_csv):
     linhas.append('- Cashback rate: ' + str(round(vencedor['cashback_rate'], 1)) + '%')
     linhas.append('')
     linhas.append('**Justificativa:** O grupo vencedor apresenta maior margem liquida, garantindo sustentabilidade financeira para o Meliuz.')
-
     os.makedirs('reports', exist_ok=True)
     nome = parceiro.lower().replace(' ', '_')
     caminho_relatorio = 'reports/relatorio_' + nome + '.md'
-
     with open(caminho_relatorio, 'w') as f:
         f.write('\n'.join(linhas))
-
     print('Relatorio salvo em: ' + caminho_relatorio)
+
+def registrar_tracking(df, metricas, vencedor, caminho_csv):
+    parceiro = df['Parceiro'].iloc[0]
+    data_inicio = df['Data'].min().strftime('%d/%m/%Y')
+    data_fim = df['Data'].max().strftime('%d/%m/%Y')
+    grupos = ' | '.join(metricas['Grupos'].tolist())
+    nova_linha = {
+        'nome_teste': 'AB_' + parceiro.replace(' ', '_'),
+        'descricao': 'Teste A/B de cashback para ' + parceiro,
+        'parceiro': parceiro,
+        'periodo': data_inicio + ' a ' + data_fim,
+        'grupos_testados': grupos,
+        'grupo_vencedor': vencedor['Grupos'],
+        'margem_vencedor': round(vencedor['margem_liquida'], 2),
+        'margem_pct_vencedor': str(round(vencedor['margem_pct'], 1)) + '%',
+        'cashback_rate_vencedor': str(round(vencedor['cashback_rate'], 1)) + '%',
+        'decisao': 'Escalar ' + str(vencedor['Grupos']),
+        'analisado_em': datetime.now().strftime('%d/%m/%Y %H:%M'),
+        'arquivo_origem': caminho_csv
+    }
+    tracking_path = 'tracking.csv'
+    if os.path.exists(tracking_path):
+        tracker = pd.read_csv(tracking_path)
+        tracker = tracker[tracker['arquivo_origem'] != caminho_csv]
+        tracker = pd.concat([tracker, pd.DataFrame([nova_linha])], ignore_index=True)
+    else:
+        tracker = pd.DataFrame([nova_linha])
+    tracker.to_csv(tracking_path, index=False)
+    print('Tracking atualizado em: ' + tracking_path)
 
 caminho = sys.argv[1]
 df = carregar_dados(caminho)
@@ -94,3 +117,4 @@ print('Margem %: ' + str(round(vencedor['margem_pct'], 1)) + '%')
 print('Cashback rate: ' + str(round(vencedor['cashback_rate'], 1)) + '%')
 print('==============================')
 gerar_relatorio(df, metricas, vencedor, caminho)
+registrar_tracking(df, metricas, vencedor, caminho)
