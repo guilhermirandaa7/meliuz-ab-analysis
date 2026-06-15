@@ -21,3 +21,6 @@ __pycache__/
 # Sistema operacional
 .DS_Store
 Thumbs.db
+
+# Credenciais Google - NAO SUBIR
+credentials.json

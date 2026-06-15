@@ -1,7 +1,13 @@
 ﻿import pandas as pd
 import sys
 import os
+import json
+import gspread
+from google.oauth2.service_account import Credentials
 from datetime import datetime
+
+SCOPES = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+SHEET_NAME = 'Meliuz AB Tracking'
 
 def carregar_dados(caminho):
     df = pd.read_csv(caminho)
@@ -117,6 +123,21 @@ def registrar_tracking(df, metricas, vencedor, caminho_csv):
         tracker = pd.DataFrame([nova_linha])
     tracker.to_csv(tracking_path, index=False)
     print('Tracking atualizado em: ' + tracking_path)
+    return nova_linha
+
+def registrar_sheets(nova_linha):
+    try:
+        creds = Credentials.from_service_account_file('credentials.json', scopes=SCOPES)
+        client = gspread.authorize(creds)
+        sheet = client.open(SHEET_NAME).sheet1
+        if sheet.row_count == 1 and sheet.col_count == 1:
+            cabecalho = list(nova_linha.keys())
+            sheet.append_row(cabecalho)
+        valores = [str(v) for v in nova_linha.values()]
+        sheet.append_row(valores)
+        print('Registro salvo no Google Sheets!')
+    except Exception as e:
+        print('Erro ao salvar no Google Sheets: ' + str(e))
 
 caminho = sys.argv[1]
 df = carregar_dados(caminho)
@@ -131,4 +152,5 @@ print('Margem %: ' + str(round(vencedor['margem_pct'], 1)) + '%')
 print('Cashback rate: ' + str(round(vencedor['cashback_rate'], 1)) + '%')
 print('==============================')
 gerar_relatorio(df, metricas, vencedor, caminho)
-registrar_tracking(df, metricas, vencedor, caminho)
+nova_linha = registrar_tracking(df, metricas, vencedor, caminho)
+registrar_sheets(nova_linha)
