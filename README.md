@@ -1,16 +1,19 @@
-# Meliuz A/B Test Analyzer
+﻿# Meliuz A/B Test Analyzer
 
 Solucao automatizada para analise de testes A/B de cashback do Meliuz Growth.
+
+## Planilha de acompanhamento
+
+Acesse o tracking completo dos testes aqui:
+[Meliuz AB Tracking - Google Sheets](COLE_O_LINK_AQUI)
 
 ## Como usar
 
 Execute o script indicando o arquivo CSV do teste:
 
-\`\`\`
 python analyze.py data/dataset_01_parceiroA.csv
 python analyze.py data/dataset_02_parceiroB.csv
 python analyze.py data/dataset_03_parceiroC.csv
-\`\`\`
 
 ## O que o script faz
 
@@ -18,25 +21,21 @@ python analyze.py data/dataset_03_parceiroC.csv
 2. Calcula metricas por grupo (margem, cashback rate, ticket medio)
 3. Decide qual grupo escalar baseado na maior margem liquida
 4. Gera relatorio em reports/
-5. Registra o resultado em tracking.csv
+5. Registra o resultado em tracking.csv e no Google Sheets
 
 ## Estrutura do projeto
 
-\`\`\`
 meliuz-ab-analysis/
 ├── analyze.py         <- script principal
-├── tracking.csv       <- historico de todos os testes
+├── tracking.csv       <- historico local dos testes
 ├── data/              <- datasets dos testes
 ├── reports/           <- relatorios gerados automaticamente
 ├── CLAUDE.md          <- instrucoes para agente de IA
 └── README.md
-\`\`\`
 
 ## Logica de decisao
 
 O grupo vencedor e escolhido pela maior margem liquida (comissao - cashback).
-
-Isso garante sustentabilidade financeira para o Meliuz: cashback e um custo, e o objetivo e maximizar o que sobra apos distribuir o cashback aos usuarios.
 
 ## Resultados
 
@@ -48,7 +47,4 @@ Isso garante sustentabilidade financeira para o Meliuz: cashback e um custo, e o
 
 ## Requisitos
 
-\`\`\`
-pip install pandas
-\`\`\`
-"@ | Out-File -FilePath README.md -Encoding utf8
+python -m pip install pandas gspread oauth2client
