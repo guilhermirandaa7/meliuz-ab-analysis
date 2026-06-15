@@ -1,10 +1,11 @@
-﻿import pandas as pd
+# -*- coding: utf-8 -*-
+import pandas as pd
 import sys
 
 def carregar_dados(caminho):
-    df = pd.read_csv(caminho)
-    for col in ['comissao', 'cashback', 'vendas totais']:
-        df = df.rename(columns={'comissão': 'comissao', 'Grupos de usuários': 'Grupos'})
+    df = pd.read_csv(caminho, encoding='utf-8')
+    colunas = ['comissao', 'cashback', 'vendas totais']
+    df = df.rename(columns={'comissão': 'comissao', 'Grupos de usuários': 'Grupos'})
     for col in ['comissao', 'cashback', 'vendas totais']:
         df[col] = df[col].str.replace('R$ ', '').str.replace('.', '').astype(float)
     df['Data'] = pd.to_datetime(df['Data'])
@@ -25,12 +26,12 @@ def calcular_metricas(df):
 
 def decidir_vencedor(metricas):
     vencedor = metricas.sort_values('margem_liquida', ascending=False).iloc[0]
-    print('========== DECISAO ==========')
-    print('Escalar: ' + vencedor['Grupos'])
-    print('Margem liquida: R$' + str(round(vencedor['margem_liquida'], 0)))
-    print('Margem %: ' + str(round(vencedor['margem_pct'], 1)))
-    print('Cashback rate: ' + str(round(vencedor['cashback_rate'], 1)))
-    print('==============================')
+    print('\n========== DECISAO ==========')
+    print(f"Escalar: {vencedor['Grupos']}")
+    print(f"Margem liquida: R$ {vencedor['margem_liquida']:,.0f}")
+    print(f"Margem %: {vencedor['margem_pct']:.1f}%")
+    print(f"Cashback rate: {vencedor['cashback_rate']:.1f}%")
+    print('==============================\n')
     return vencedor
 
 caminho = sys.argv[1]
