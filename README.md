@@ -5,7 +5,7 @@ Solucao automatizada para analise de testes A/B de cashback do Meliuz Growth.
 ## Planilha de acompanhamento
 
 Acesse o tracking completo dos testes aqui:
-[Meliuz AB Tracking - Google Sheets](COLE_O_LINK_AQUI)
+[Meliuz AB Tracking - Google Sheets](https://docs.google.com/spreadsheets/d/10DcAUgClidt7Vc1qU5P04CYhsP1eUgEmFJgPg0Noi8k/edit?usp=sharing)
 
 ## Como usar
 
